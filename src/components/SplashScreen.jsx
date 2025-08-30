@@ -4,9 +4,7 @@ const SplashScreen = ({ onAppReady, isPWA }) => {
   const [showInstallButton, setShowInstallButton] = useState(false)
   const [deferredPrompt, setDeferredPrompt] = useState(null)
   const [isPWAInstalled, setIsPWAInstalled] = useState(false)
-  const [showInstructions, setShowInstructions] = useState(false)
   const [loading, setLoading] = useState(true)
-  const [minDelayComplete, setMinDelayComplete] = useState(false)
 
   useEffect(() => {
     // Check if app is already installed as PWA
@@ -20,26 +18,12 @@ const SplashScreen = ({ onAppReady, isPWA }) => {
       return false
     }
 
-    // Minimum 3-second delay for splash screen
-    const minDelayTimer = setTimeout(() => {
-      setMinDelayComplete(true)
-      
-      // If PWA user, auto-transition to login after delay
-      if (isPWA && !isPWAInstalled) {
-        setTimeout(() => {
-          onAppReady()
-        }, 500) // Small additional delay for smooth transition
-      }
-    }, 3000)
-
     // Handle beforeinstallprompt event (only for browser users)
     const handleBeforeInstallPrompt = (e) => {
       if (!isPWA) { // Only handle for browser users
         e.preventDefault()
         setDeferredPrompt(e)
-        if (minDelayComplete) {
-          setShowInstallButton(true)
-        }
+        setShowInstallButton(true)
         setLoading(false)
         console.log('PWA install prompt available')
       }
@@ -59,33 +43,21 @@ const SplashScreen = ({ onAppReady, isPWA }) => {
 
     // Check if already installed first
     if (!checkIfInstalled()) {
-      // If not installed, show appropriate content after minimum delay
-      setTimeout(() => {
-        setLoading(false)
-        if (!isPWA && !showInstallButton && minDelayComplete) {
-          setShowInstructions(true)
-        }
-      }, 3000) // Show install instructions after 3 seconds
-
+      // If not installed, show appropriate content immediately
+      setLoading(false)
+      
       // Listen for install events (only for browser users)
       if (!isPWA) {
         window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
         window.addEventListener('appinstalled', handleAppInstalled)
 
         return () => {
-          clearTimeout(minDelayTimer)
           window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
           window.removeEventListener('appinstalled', handleAppInstalled)
         }
       }
-    } else {
-      clearTimeout(minDelayTimer)
     }
-
-    return () => {
-      clearTimeout(minDelayTimer)
-    }
-  }, [onAppReady, showInstallButton, minDelayComplete, isPWA, isPWAInstalled])
+  }, [onAppReady, isPWA, isPWAInstalled])
 
   const handleInstallClick = async () => {
     if (deferredPrompt) {
@@ -98,35 +70,14 @@ const SplashScreen = ({ onAppReady, isPWA }) => {
           console.log('User accepted the install prompt')
         } else {
           console.log('User dismissed the install prompt')
-          setShowInstructions(true)
         }
         
         setDeferredPrompt(null)
         setShowInstallButton(false)
       } catch (error) {
         console.error('Error during install prompt:', error)
-        setShowInstructions(true)
       }
-    } else {
-      setShowInstructions(true)
     }
-  }
-
-  const showInstallInstructions = () => {
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
-    const isAndroid = /Android/.test(navigator.userAgent)
-    
-    let message = ''
-    
-    if (isIOS) {
-      message = 'To install Swiss Bank:\n\n1. Tap the Share button (square with arrow)\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add" to confirm\n\nThen open the app from your home screen!'
-    } else if (isAndroid) {
-      message = 'To install Swiss Bank:\n\n1. Tap the three dots menu (⋮)\n2. Tap "Add to Home Screen" or "Install App"\n3. Tap "Add" to confirm\n\nThen open the app from your home screen!'
-    } else {
-      message = 'To install Swiss Bank:\n\nLook for the install button in your browser\'s address bar or menu\n\nThen open the app from your home screen!'
-    }
-    
-    alert(message)
   }
 
   // Block browser access - no continue in browser option
@@ -185,8 +136,8 @@ const SplashScreen = ({ onAppReady, isPWA }) => {
           </div>
         )}
 
-        {/* Install Button - Only for browser users */}
-        {showInstallButton && !loading && minDelayComplete && !isPWA && (
+        {/* Install Button - Only for browser users, shows immediately */}
+        {showInstallButton && !loading && !isPWA && (
           <div className="space-y-4">
             <p className="text-blue-100 text-lg mb-6">
               Install Swiss Bank for the best experience
@@ -197,37 +148,6 @@ const SplashScreen = ({ onAppReady, isPWA }) => {
             >
               📱 Install Swiss Bank App
             </button>
-            <div className="mt-4">
-              <button
-                onClick={handleContinueInBrowser}
-                className="text-blue-100 underline text-sm hover:text-white transition-colors"
-              >
-                Continue in browser
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Manual Install Instructions - Only for browser users */}
-        {showInstructions && !showInstallButton && !loading && minDelayComplete && !isPWA && (
-          <div className="space-y-4">
-            <p className="text-blue-100 text-lg mb-6">
-              Install Swiss Bank for the best experience
-            </p>
-            <button
-              onClick={showInstallInstructions}
-              className="bg-white text-blue-900 px-8 py-4 rounded-xl font-bold text-lg shadow-2xl hover:bg-blue-50 transition-all duration-300 transform hover:scale-105"
-            >
-              📱 How to Install
-            </button>
-            <div className="mt-4">
-              <button
-                onClick={handleContinueInBrowser}
-                className="text-blue-100 underline text-sm hover:text-white transition-colors"
-              >
-                Continue in browser
-              </button>
-            </div>
           </div>
         )}
 
@@ -245,8 +165,8 @@ const SplashScreen = ({ onAppReady, isPWA }) => {
           </div>
         )}
 
-        {/* PWA User Message - After 3 seconds */}
-        {isPWA && minDelayComplete && !isPWAInstalled && (
+        {/* PWA User Message - Shows briefly then transitions */}
+        {isPWA && !isPWAInstalled && !loading && (
           <div className="space-y-4">
             <div className="animate-pulse">
               <p className="text-blue-100 text-lg mb-4">
