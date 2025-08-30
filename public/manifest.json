@@ -1,0 +1,22 @@
+{
+  "name": "Swiss Bank",
+  "short_name": "SwissBank",
+  "description": "Your trusted Swiss banking experience",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a2540",
+  "theme_color": "#0a2540",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "categories": ["finance", "business"],
+  "prefer_related_applications": false
+}

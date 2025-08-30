@@ -1,0 +1,53 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle with blue gradient -->
+  <defs>
+    <linearGradient id="bgGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff" />
+      <stop offset="100%" style="stop-color:#f0f8ff" />
+    </linearGradient>
+    <linearGradient id="borderGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6" />
+      <stop offset="50%" style="stop-color:#1e40af" />
+      <stop offset="100%" style="stop-color:#1e3a8a" />
+    </linearGradient>
+    <linearGradient id="letterGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6" />
+      <stop offset="50%" style="stop-color:#2563eb" />
+      <stop offset="100%" style="stop-color:#1e40af" />
+    </linearGradient>
+    <linearGradient id="accentGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#60a5fa" />
+      <stop offset="100%" style="stop-color:#3b82f6" />
+    </linearGradient>
+    <linearGradient id="lightBlueGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#93c5fd" />
+      <stop offset="100%" style="stop-color:#60a5fa" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="60" cy="60" r="58" fill="url(#bgGrad2)" stroke="url(#borderGrad2)" stroke-width="2"/>
+  
+  <!-- Subtle blue overlay -->
+  <circle cx="60" cy="60" r="58" fill="url(#accentGrad2)" opacity="0.05"/>
+  
+  <!-- Overlapping S and B design with blue shades -->
+  <g transform="translate(60, 60)">
+    <!-- S letter (background) with light blue -->
+    <path d="M-30 -20 Q-30 -30 -20 -30 Q-10 -30 -10 -20 Q-10 -10 -20 -10 Q-30 -10 -30 0 Q-30 10 -20 10 Q-10 10 -10 0 Q-10 -10 -20 -10 Q-30 -10 -30 0 Q-30 10 -20 10 Q-10 10 -10 20 Q-10 30 -20 30 Q-30 30 -30 20" 
+          fill="none" stroke="url(#lightBlueGrad2)" stroke-width="3" stroke-linecap="round" stroke-opacity="0.8"/>
+    
+    <!-- B letter (foreground) with gradient -->
+    <path d="M-5 -30 L-5 30 M-5 -30 Q15 -30 15 -15 Q15 0 -5 0 Q15 0 15 15 Q15 30 -5 30" 
+          fill="none" stroke="url(#letterGrad2)" stroke-width="4" stroke-linecap="round"/>
+    
+    <!-- Overlap highlight with blue shade -->
+    <path d="M-5 -10 Q5 -10 5 0 Q5 10 -5 10" 
+          fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  
+  <!-- Banking element - minimalist columns with blue shades -->
+  <rect x="45" y="25" width="2" height="20" fill="url(#accentGrad2)" opacity="0.4"/>
+  <rect x="73" y="25" width="2" height="20" fill="url(#accentGrad2)" opacity="0.4"/>
+  <rect x="45" y="43" width="30" height="2" fill="url(#accentGrad2)" opacity="0.4"/>
+</svg>

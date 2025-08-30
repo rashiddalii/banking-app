@@ -1,0 +1,47 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle with blue gradient -->
+  <defs>
+    <linearGradient id="bgGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff" />
+      <stop offset="100%" style="stop-color:#f0f8ff" />
+    </linearGradient>
+    <linearGradient id="borderGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6" />
+      <stop offset="50%" style="stop-color:#1e40af" />
+      <stop offset="100%" style="stop-color:#1e3a8a" />
+    </linearGradient>
+    <linearGradient id="letterGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6" />
+      <stop offset="50%" style="stop-color:#2563eb" />
+      <stop offset="100%" style="stop-color:#1e40af" />
+    </linearGradient>
+    <linearGradient id="accentGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#60a5fa" />
+      <stop offset="100%" style="stop-color:#3b82f6" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="60" cy="60" r="58" fill="url(#bgGrad1)" stroke="url(#borderGrad1)" stroke-width="2"/>
+  
+  <!-- Subtle blue overlay -->
+  <circle cx="60" cy="60" r="58" fill="url(#accentGrad1)" opacity="0.05"/>
+  
+  <!-- Interlocked S and B design with blue shades -->
+  <g transform="translate(60, 60)">
+    <!-- S letter with gradient -->
+    <path d="M-25 -15 Q-25 -25 -15 -25 Q-5 -25 -5 -15 Q-5 -5 -15 -5 Q-25 -5 -25 5 Q-25 15 -15 15 Q-5 15 -5 5" 
+          fill="none" stroke="url(#letterGrad1)" stroke-width="4" stroke-linecap="round"/>
+    
+    <!-- B letter with gradient -->
+    <path d="M5 -25 L5 25 M5 -25 Q25 -25 25 -10 Q25 5 5 5 Q25 5 25 20 Q25 25 5 25" 
+          fill="none" stroke="url(#letterGrad1)" stroke-width="4" stroke-linecap="round"/>
+    
+    <!-- Connection point with blue shade -->
+    <circle cx="-5" cy="5" r="2" fill="#3b82f6"/>
+  </g>
+  
+  <!-- Subtle banking element - minimalist shield with blue shades -->
+  <path d="M60 20 L75 25 L75 40 Q75 50 60 55 L45 40 L45 25 Z" 
+        fill="none" stroke="url(#accentGrad1)" stroke-width="1" stroke-opacity="0.4"/>
+</svg>

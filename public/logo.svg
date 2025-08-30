@@ -1,0 +1,47 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle with blue gradient -->
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ffffff" />
+      <stop offset="100%" style="stop-color:#f0f8ff" />
+    </linearGradient>
+    <linearGradient id="borderGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6" />
+      <stop offset="50%" style="stop-color:#1e40af" />
+      <stop offset="100%" style="stop-color:#1e3a8a" />
+    </linearGradient>
+    <linearGradient id="letterGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3b82f6" />
+      <stop offset="50%" style="stop-color:#2563eb" />
+      <stop offset="100%" style="stop-color:#1e40af" />
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#60a5fa" />
+      <stop offset="100%" style="stop-color:#3b82f6" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="60" cy="60" r="58" fill="url(#bgGrad)" stroke="url(#borderGrad)" stroke-width="2"/>
+  
+  <!-- Subtle blue overlay -->
+  <circle cx="60" cy="60" r="58" fill="url(#accentGrad)" opacity="0.05"/>
+  
+  <!-- Clean SB design with blue shades -->
+  <g transform="translate(60, 60)">
+    <!-- S letter with gradient -->
+    <path d="M-25 -20 Q-25 -30 -15 -30 Q-5 -30 -5 -20 Q-5 -10 -15 -10 Q-25 -10 -25 0 Q-25 10 -15 10 Q-5 10 -5 20 Q-5 30 -15 30 Q-25 30 -25 20" 
+          fill="none" stroke="url(#letterGrad)" stroke-width="4" stroke-linecap="round"/>
+    
+    <!-- B letter with gradient -->
+    <path d="M-5 -30 L-5 30 M-5 -30 Q15 -30 15 -15 Q15 0 -5 0 Q15 0 15 15 Q15 30 -5 30" 
+          fill="none" stroke="url(#letterGrad)" stroke-width="4" stroke-linecap="round"/>
+    
+    <!-- Connection point with blue shade -->
+    <circle cx="-5" cy="0" r="2" fill="#3b82f6"/>
+  </g>
+  
+  <!-- Subtle banking element with blue shades -->
+  <path d="M60 25 L70 30 L70 40 Q70 45 60 50 L50 40 L50 30 Z" 
+        fill="none" stroke="url(#accentGrad)" stroke-width="1" stroke-opacity="0.3"/>
+</svg>

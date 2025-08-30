@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Icon Generator</title>
+</head>
+<body>
+    <canvas id="canvas192" width="192" height="192"></canvas>
+    <canvas id="canvas512" width="512" height="512"></canvas>
+    
+    <script>
+        function createIcon(canvasId, size) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#ffffff');
+            gradient.addColorStop(1, '#f0f8ff');
+            
+            // Draw background circle
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(size/2, size/2, size/2 - 4, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Border gradient
+            const borderGradient = ctx.createLinearGradient(0, 0, size, size);
+            borderGradient.addColorStop(0, '#3b82f6');
+            borderGradient.addColorStop(0.5, '#1e40af');
+            borderGradient.addColorStop(1, '#1e3a8a');
+            
+            ctx.strokeStyle = borderGradient;
+            ctx.lineWidth = 4;
+            ctx.stroke();
+            
+            // Draw "SB" letters
+            ctx.strokeStyle = '#3b82f6';
+            ctx.lineWidth = size/32;
+            ctx.lineCap = 'round';
+            
+            const centerX = size/2;
+            const centerY = size/2;
+            const letterSize = size/4;
+            
+            // Draw "S"
+            ctx.beginPath();
+            ctx.moveTo(centerX - letterSize/2, centerY - letterSize/2);
+            ctx.quadraticCurveTo(centerX - letterSize/2, centerY - letterSize, centerX, centerY - letterSize);
+            ctx.quadraticCurveTo(centerX + letterSize/2, centerY - letterSize, centerX + letterSize/2, centerY - letterSize/2);
+            ctx.quadraticCurveTo(centerX + letterSize/2, centerY, centerX, centerY);
+            ctx.quadraticCurveTo(centerX - letterSize/2, centerY, centerX - letterSize/2, centerY + letterSize/2);
+            ctx.quadraticCurveTo(centerX - letterSize/2, centerY + letterSize, centerX, centerY + letterSize);
+            ctx.quadraticCurveTo(centerX + letterSize/2, centerY + letterSize, centerX + letterSize/2, centerY + letterSize/2);
+            ctx.stroke();
+            
+            // Draw "B"
+            ctx.beginPath();
+            ctx.moveTo(centerX - letterSize/2, centerY - letterSize);
+            ctx.lineTo(centerX - letterSize/2, centerY + letterSize);
+            ctx.moveTo(centerX - letterSize/2, centerY - letterSize);
+            ctx.quadraticCurveTo(centerX + letterSize/2, centerY - letterSize, centerX + letterSize/2, centerY - letterSize/2);
+            ctx.quadraticCurveTo(centerX + letterSize/2, centerY, centerX, centerY);
+            ctx.quadraticCurveTo(centerX + letterSize/2, centerY, centerX + letterSize/2, centerY + letterSize/2);
+            ctx.quadraticCurveTo(centerX + letterSize/2, centerY + letterSize, centerX - letterSize/2, centerY + letterSize);
+            ctx.stroke();
+            
+            // Draw dot
+            ctx.fillStyle = '#3b82f6';
+            ctx.beginPath();
+            ctx.arc(centerX - letterSize/2, centerY, size/64, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Download the icon
+            const link = document.createElement('a');
+            link.download = `icon-${size}.png`;
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+        
+        // Generate both icons
+        createIcon('canvas192', 192);
+        createIcon('canvas512', 512);
+    </script>
+</body>
+</html>
