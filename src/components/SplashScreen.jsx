@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-const SplashScreen = ({ onAppReady }) => {
+const SplashScreen = ({ onAppReady, isPWA }) => {
   const [showInstallButton, setShowInstallButton] = useState(false)
   const [deferredPrompt, setDeferredPrompt] = useState(null)
   const [isPWAInstalled, setIsPWAInstalled] = useState(false)
@@ -15,10 +15,6 @@ const SplashScreen = ({ onAppReady }) => {
           window.navigator.standalone === true) {
         setIsPWAInstalled(true)
         setShowInstallButton(false)
-        // Proceed to app after a short delay
-        setTimeout(() => {
-          onAppReady()
-        }, 1000)
         return true
       }
       return false
@@ -27,17 +23,26 @@ const SplashScreen = ({ onAppReady }) => {
     // Minimum 3-second delay for splash screen
     const minDelayTimer = setTimeout(() => {
       setMinDelayComplete(true)
+      
+      // If PWA user, auto-transition to login after delay
+      if (isPWA && !isPWAInstalled) {
+        setTimeout(() => {
+          onAppReady()
+        }, 500) // Small additional delay for smooth transition
+      }
     }, 3000)
 
-    // Handle beforeinstallprompt event
+    // Handle beforeinstallprompt event (only for browser users)
     const handleBeforeInstallPrompt = (e) => {
-      e.preventDefault()
-      setDeferredPrompt(e)
-      if (minDelayComplete) {
-        setShowInstallButton(true)
+      if (!isPWA) { // Only handle for browser users
+        e.preventDefault()
+        setDeferredPrompt(e)
+        if (minDelayComplete) {
+          setShowInstallButton(true)
+        }
+        setLoading(false)
+        console.log('PWA install prompt available')
       }
-      setLoading(false)
-      console.log('PWA install prompt available')
     }
 
     // Handle appinstalled event
@@ -54,27 +59,33 @@ const SplashScreen = ({ onAppReady }) => {
 
     // Check if already installed first
     if (!checkIfInstalled()) {
-      // If not installed, show install button after minimum delay
+      // If not installed, show appropriate content after minimum delay
       setTimeout(() => {
         setLoading(false)
-        if (!showInstallButton && minDelayComplete) {
+        if (!isPWA && !showInstallButton && minDelayComplete) {
           setShowInstructions(true)
         }
       }, 3000) // Show install instructions after 3 seconds
 
-      // Listen for install events
-      window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
-      window.addEventListener('appinstalled', handleAppInstalled)
+      // Listen for install events (only for browser users)
+      if (!isPWA) {
+        window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+        window.addEventListener('appinstalled', handleAppInstalled)
 
-      return () => {
-        clearTimeout(minDelayTimer)
-        window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
-        window.removeEventListener('appinstalled', handleAppInstalled)
+        return () => {
+          clearTimeout(minDelayTimer)
+          window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+          window.removeEventListener('appinstalled', handleAppInstalled)
+        }
       }
     } else {
       clearTimeout(minDelayTimer)
     }
-  }, [onAppReady, showInstallButton, minDelayComplete])
+
+    return () => {
+      clearTimeout(minDelayTimer)
+    }
+  }, [onAppReady, showInstallButton, minDelayComplete, isPWA, isPWAInstalled])
 
   const handleInstallClick = async () => {
     if (deferredPrompt) {
@@ -174,8 +185,8 @@ const SplashScreen = ({ onAppReady }) => {
           </div>
         )}
 
-        {/* Install Button */}
-        {showInstallButton && !loading && minDelayComplete && (
+        {/* Install Button - Only for browser users */}
+        {showInstallButton && !loading && minDelayComplete && !isPWA && (
           <div className="space-y-4">
             <p className="text-blue-100 text-lg mb-6">
               Install Swiss Bank for the best experience
@@ -197,8 +208,8 @@ const SplashScreen = ({ onAppReady }) => {
           </div>
         )}
 
-        {/* Manual Install Instructions */}
-        {showInstructions && !showInstallButton && !loading && minDelayComplete && (
+        {/* Manual Install Instructions - Only for browser users */}
+        {showInstructions && !showInstallButton && !loading && minDelayComplete && !isPWA && (
           <div className="space-y-4">
             <p className="text-blue-100 text-lg mb-6">
               Install Swiss Bank for the best experience
@@ -229,6 +240,20 @@ const SplashScreen = ({ onAppReady }) => {
               </p>
               <p className="text-blue-100 text-sm">
                 Opening your banking app...
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* PWA User Message - After 3 seconds */}
+        {isPWA && minDelayComplete && !isPWAInstalled && (
+          <div className="space-y-4">
+            <div className="animate-pulse">
+              <p className="text-blue-100 text-lg mb-4">
+                🚀 Opening Swiss Bank...
+              </p>
+              <p className="text-blue-100 text-sm">
+                Please wait while we prepare your banking experience
               </p>
             </div>
           </div>

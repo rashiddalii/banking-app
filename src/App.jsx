@@ -39,12 +39,11 @@ function App() {
       
       if (isStandalone) {
         setIsPWA(true)
-        // If already installed as PWA, proceed directly to login
-        setCurrentScreen('login')
+        // PWA users will see splash screen first, then transition to login
+        // The splash screen will handle the transition after showing for 3+ seconds
       } else {
         setIsPWA(false)
-        // If not PWA, stay on splash screen to show install button
-        setCurrentScreen('splash')
+        // Browser users stay on splash screen to show install button
       }
     }
 
@@ -73,7 +72,7 @@ function App() {
   return (
     <div className="App">
       {currentScreen === 'splash' && (
-        <SplashScreen onAppReady={handleAppReady} />
+        <SplashScreen onAppReady={handleAppReady} isPWA={isPWA} />
       )}
       
       {currentScreen === 'login' && isPWA && (
