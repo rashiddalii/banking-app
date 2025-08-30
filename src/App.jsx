@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import InstallScreen from './components/InstallScreen'
 import SplashScreen from './components/SplashScreen'
 import LoginScreen from './components/LoginScreen'
 import Dashboard from './components/Dashboard'
@@ -14,8 +15,8 @@ function App() {
     if (isPWA) {
       setCurrentScreen('login')
     } else {
-      // Stay on splash screen if not PWA
-      setCurrentScreen('splash')
+      // Stay on install screen if not PWA
+      setCurrentScreen('install')
     }
   }
 
@@ -39,11 +40,12 @@ function App() {
       
       if (isStandalone) {
         setIsPWA(true)
-        // PWA users stay on splash screen - no auto-transition
-        // They need to manually proceed or the splash screen handles it
+        // PWA users start with splash screen
+        setCurrentScreen('splash')
       } else {
         setIsPWA(false)
-        // Browser users stay on splash screen to show install button
+        // Browser users start with install screen
+        setCurrentScreen('install')
       }
     }
 
@@ -51,7 +53,7 @@ function App() {
   }, [])
 
   // Block access if not PWA
-  if (!isPWA && currentScreen !== 'splash') {
+  if (!isPWA && currentScreen !== 'install') {
     return (
       <div className="h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700 flex flex-col items-center justify-center p-4">
         <div className="text-center text-white">
@@ -59,7 +61,7 @@ function App() {
           <p className="text-xl mb-6">Swiss Bank only works when installed as an app.</p>
           <p className="text-lg">Please install the app to access your banking features.</p>
           <button
-            onClick={() => setCurrentScreen('splash')}
+            onClick={() => setCurrentScreen('install')}
             className="mt-6 bg-white text-blue-900 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
           >
             Back to Install
@@ -71,8 +73,12 @@ function App() {
 
   return (
     <div className="App">
-      {currentScreen === 'splash' && (
-        <SplashScreen onAppReady={handleAppReady} isPWA={isPWA} />
+      {currentScreen === 'install' && !isPWA && (
+        <InstallScreen />
+      )}
+      
+      {currentScreen === 'splash' && isPWA && (
+        <SplashScreen onAppReady={handleAppReady} />
       )}
       
       {currentScreen === 'login' && isPWA && (
