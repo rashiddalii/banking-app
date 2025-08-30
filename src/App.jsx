@@ -39,10 +39,8 @@ function App() {
       
       if (isStandalone) {
         setIsPWA(true)
-        // PWA users see splash briefly then auto-transition to login
-        setTimeout(() => {
-          setCurrentScreen('login')
-        }, 1500) // Brief 1.5 second splash for PWA users
+        // PWA users stay on splash screen - no auto-transition
+        // They need to manually proceed or the splash screen handles it
       } else {
         setIsPWA(false)
         // Browser users stay on splash screen to show install button

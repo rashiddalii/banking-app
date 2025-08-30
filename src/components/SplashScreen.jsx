@@ -35,10 +35,7 @@ const SplashScreen = ({ onAppReady, isPWA }) => {
       setShowInstallButton(false)
       setDeferredPrompt(null)
       setIsPWAInstalled(true)
-      // Proceed to app after installation
-      setTimeout(() => {
-        onAppReady()
-      }, 1000)
+      // Don't auto-transition - let user manually open the app
     }
 
     // Check if already installed first
@@ -78,12 +75,6 @@ const SplashScreen = ({ onAppReady, isPWA }) => {
         console.error('Error during install prompt:', error)
       }
     }
-  }
-
-  // Block browser access - no continue in browser option
-  const handleContinueInBrowser = () => {
-    // Show message that app only works when installed
-    alert('Swiss Bank only works when installed as an app.\n\nPlease install the app to access your banking features.')
   }
 
   return (
@@ -151,29 +142,32 @@ const SplashScreen = ({ onAppReady, isPWA }) => {
           </div>
         )}
 
-        {/* PWA Installed Message */}
+        {/* App Installed Message - Shows when user installs the app */}
         {isPWAInstalled && (
           <div className="space-y-4">
             <div className="animate-pulse">
               <p className="text-green-300 text-lg mb-4">
                 ✅ Swiss Bank App Installed!
               </p>
-              <p className="text-blue-100 text-sm">
-                Opening your banking app...
+              <p className="text-blue-100 text-sm mb-4">
+                The app has been installed on your device
+              </p>
+              <p className="text-blue-100 text-xs">
+                Please open the app from your home screen to access your banking features
               </p>
             </div>
           </div>
         )}
 
-        {/* PWA User Message - Shows briefly then transitions */}
+        {/* PWA User Message - Shows when user opens the installed app */}
         {isPWA && !isPWAInstalled && !loading && (
           <div className="space-y-4">
             <div className="animate-pulse">
               <p className="text-blue-100 text-lg mb-4">
-                🚀 Opening Swiss Bank...
+                🚀 Welcome to Swiss Bank!
               </p>
               <p className="text-blue-100 text-sm">
-                Please wait while we prepare your banking experience
+                Opening your banking app...
               </p>
             </div>
           </div>
