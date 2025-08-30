@@ -44,18 +44,89 @@ self.addEventListener('activate', (event) => {
 
 // Fetch event - serve from cache, fallback to network
 self.addEventListener('fetch', (event) => {
-  console.log('Fetching:', event.request.url)
+  const { request } = event
+  
+  // Skip non-GET requests
+  if (request.method !== 'GET') {
+    return
+  }
+
+  // Handle navigation requests (SPA routing)
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      fetch(request)
+        .catch(() => {
+          return caches.match('/index.html')
+        })
+    )
+    return
+  }
+
+  // Handle static assets (JS, CSS, images)
+  if (request.destination === 'script' || 
+      request.destination === 'style' || 
+      request.destination === 'image' ||
+      request.url.includes('.js') ||
+      request.url.includes('.css') ||
+      request.url.includes('.svg') ||
+      request.url.includes('.png')) {
+    
+    event.respondWith(
+      caches.match(request)
+        .then((response) => {
+          // Return cached version if available
+          if (response) {
+            return response
+          }
+          
+          // Fetch from network
+          return fetch(request)
+            .then((fetchResponse) => {
+              // Don't cache failed responses
+              if (!fetchResponse || fetchResponse.status !== 200) {
+                return fetchResponse
+              }
+              
+              // Clone the response for caching
+              const responseToCache = fetchResponse.clone()
+              
+              // Cache successful responses
+              caches.open(CACHE_NAME)
+                .then((cache) => {
+                  cache.put(request, responseToCache)
+                })
+              
+              return fetchResponse
+            })
+            .catch(() => {
+              // Return offline fallback for critical assets
+              if (request.url.includes('index.html')) {
+                return caches.match('/index.html')
+              }
+              return null
+            })
+        })
+    )
+    return
+  }
+
+  // For all other requests, try network first, then cache
   event.respondWith(
-    caches.match(event.request)
+    fetch(request)
       .then((response) => {
-        // Return cached version or fetch from network
-        return response || fetch(event.request)
+        // Cache successful responses
+        if (response && response.status === 200) {
+          const responseToCache = response.clone()
+          caches.open(CACHE_NAME)
+            .then((cache) => {
+              cache.put(request, responseToCache)
+            })
+        }
+        return response
       })
       .catch(() => {
-        // Fallback for navigation requests
-        if (event.request.mode === 'navigate') {
-          return caches.match('/index.html')
-        }
+        // Fallback to cache
+        return caches.match(request)
       })
   )
 })
