@@ -6,6 +6,7 @@ const SplashScreen = ({ onAppReady }) => {
   const [isPWAInstalled, setIsPWAInstalled] = useState(false)
   const [showInstructions, setShowInstructions] = useState(false)
   const [loading, setLoading] = useState(true)
+  const [minDelayComplete, setMinDelayComplete] = useState(false)
 
   useEffect(() => {
     // Check if app is already installed as PWA
@@ -23,11 +24,18 @@ const SplashScreen = ({ onAppReady }) => {
       return false
     }
 
+    // Minimum 3-second delay for splash screen
+    const minDelayTimer = setTimeout(() => {
+      setMinDelayComplete(true)
+    }, 3000)
+
     // Handle beforeinstallprompt event
     const handleBeforeInstallPrompt = (e) => {
       e.preventDefault()
       setDeferredPrompt(e)
-      setShowInstallButton(true)
+      if (minDelayComplete) {
+        setShowInstallButton(true)
+      }
       setLoading(false)
       console.log('PWA install prompt available')
     }
@@ -46,10 +54,10 @@ const SplashScreen = ({ onAppReady }) => {
 
     // Check if already installed first
     if (!checkIfInstalled()) {
-      // If not installed, show install button after a delay
+      // If not installed, show install button after minimum delay
       setTimeout(() => {
         setLoading(false)
-        if (!showInstallButton) {
+        if (!showInstallButton && minDelayComplete) {
           setShowInstructions(true)
         }
       }, 3000) // Show install instructions after 3 seconds
@@ -59,11 +67,14 @@ const SplashScreen = ({ onAppReady }) => {
       window.addEventListener('appinstalled', handleAppInstalled)
 
       return () => {
+        clearTimeout(minDelayTimer)
         window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
         window.removeEventListener('appinstalled', handleAppInstalled)
       }
+    } else {
+      clearTimeout(minDelayTimer)
     }
-  }, [onAppReady, showInstallButton])
+  }, [onAppReady, showInstallButton, minDelayComplete])
 
   const handleInstallClick = async () => {
     if (deferredPrompt) {
@@ -107,9 +118,10 @@ const SplashScreen = ({ onAppReady }) => {
     alert(message)
   }
 
+  // Block browser access - no continue in browser option
   const handleContinueInBrowser = () => {
-    // Allow users to continue in browser if they want
-    onAppReady()
+    // Show message that app only works when installed
+    alert('Swiss Bank only works when installed as an app.\n\nPlease install the app to access your banking features.')
   }
 
   return (
@@ -163,7 +175,7 @@ const SplashScreen = ({ onAppReady }) => {
         )}
 
         {/* Install Button */}
-        {showInstallButton && !loading && (
+        {showInstallButton && !loading && minDelayComplete && (
           <div className="space-y-4">
             <p className="text-blue-100 text-lg mb-6">
               Install Swiss Bank for the best experience
@@ -186,7 +198,7 @@ const SplashScreen = ({ onAppReady }) => {
         )}
 
         {/* Manual Install Instructions */}
-        {showInstructions && !showInstallButton && !loading && (
+        {showInstructions && !showInstallButton && !loading && minDelayComplete && (
           <div className="space-y-4">
             <p className="text-blue-100 text-lg mb-6">
               Install Swiss Bank for the best experience
