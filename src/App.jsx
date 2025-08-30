@@ -4,44 +4,51 @@ import LoginScreen from './components/LoginScreen'
 import Dashboard from './components/Dashboard'
 
 function App() {
-  const [currentScreen, setCurrentScreen] = useState('splash') // splash, login, dashboard
+  const [currentScreen, setCurrentScreen] = useState('splash')
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [username, setUsername] = useState('')
 
-  useEffect(() => {
-    // Show splash screen for 2 seconds, then go to login
-    const timer = setTimeout(() => {
-      setCurrentScreen('login')
-    }, 2000)
-
-    return () => clearTimeout(timer)
-  }, [])
+  const handleAppReady = () => {
+    setCurrentScreen('login')
+  }
 
   const handleLogin = (user) => {
     setUsername(user)
+    setIsLoggedIn(true)
     setCurrentScreen('dashboard')
   }
 
   const handleLogout = () => {
+    setIsLoggedIn(false)
     setUsername('')
     setCurrentScreen('login')
   }
 
-  const renderScreen = () => {
-    switch (currentScreen) {
-      case 'splash':
-        return <SplashScreen />
-      case 'login':
-        return <LoginScreen onLogin={handleLogin} />
-      case 'dashboard':
-        return <Dashboard username={username} onLogout={handleLogout} />
-      default:
-        return <LoginScreen onLogin={handleLogin} />
+  // Check if app is already installed as PWA on initial load
+  useEffect(() => {
+    const isPWAInstalled = window.matchMedia('(display-mode: standalone)').matches || 
+                          window.navigator.standalone === true
+    
+    if (isPWAInstalled) {
+      // If already installed as PWA, proceed directly to login
+      setCurrentScreen('login')
     }
-  }
+    // If not installed, stay on splash screen to show install button
+  }, [])
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {renderScreen()}
+    <div className="App">
+      {currentScreen === 'splash' && (
+        <SplashScreen onAppReady={handleAppReady} />
+      )}
+      
+      {currentScreen === 'login' && (
+        <LoginScreen onLogin={handleLogin} />
+      )}
+      
+      {currentScreen === 'dashboard' && isLoggedIn && (
+        <Dashboard username={username} onLogout={handleLogout} />
+      )}
     </div>
   )
 }

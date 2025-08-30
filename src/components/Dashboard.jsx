@@ -4,9 +4,6 @@ const Dashboard = ({ username, onLogout }) => {
   const [balance, setBalance] = useState(0)
   const [showAddBalance, setShowAddBalance] = useState(false)
   const [amount, setAmount] = useState('')
-  const [showInstallButton, setShowInstallButton] = useState(false)
-  const [deferredPrompt, setDeferredPrompt] = useState(null)
-  const [isPWAInstalled, setIsPWAInstalled] = useState(false)
 
   const features = [
     { 
@@ -115,41 +112,6 @@ const Dashboard = ({ username, onLogout }) => {
     }
   }, [])
 
-  // PWA install prompt handling
-  useEffect(() => {
-    const handleBeforeInstallPrompt = (e) => {
-      e.preventDefault()
-      setDeferredPrompt(e)
-      setShowInstallButton(true)
-      console.log('PWA install prompt available')
-    }
-
-    const handleAppInstalled = () => {
-      console.log('PWA was installed')
-      setShowInstallButton(false)
-      setDeferredPrompt(null)
-      setIsPWAInstalled(true)
-    }
-
-    // Check if app is already installed
-    const checkIfInstalled = () => {
-      if (window.matchMedia('(display-mode: standalone)').matches || 
-          window.navigator.standalone === true) {
-        setIsPWAInstalled(true)
-        setShowInstallButton(false)
-      }
-    }
-
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
-    window.addEventListener('appinstalled', handleAppInstalled)
-    checkIfInstalled()
-
-    return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
-      window.removeEventListener('appinstalled', handleAppInstalled)
-    }
-  }, [])
-
   const handleAddBalance = () => {
     const numAmount = parseFloat(amount)
     if (numAmount > 0) {
@@ -159,29 +121,6 @@ const Dashboard = ({ username, onLogout }) => {
       localStorage.setItem('swissBankBalance', newBalance.toString())
       setAmount('')
       setShowAddBalance(false)
-    }
-  }
-
-  const handleInstallClick = async () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt()
-      const { outcome } = await deferredPrompt.userChoice
-      console.log(`User response to the install prompt: ${outcome}`)
-      setDeferredPrompt(null)
-      setShowInstallButton(false)
-    }
-  }
-
-  const showInstallInstructions = () => {
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
-    const isAndroid = /Android/.test(navigator.userAgent)
-    
-    if (isIOS) {
-      alert('To install: Tap the Share button (square with arrow) and select "Add to Home Screen"')
-    } else if (isAndroid) {
-      alert('To install: Tap the three dots menu and select "Add to Home Screen" or "Install App"')
-    } else {
-      alert('To install: Look for the install button in your browser\'s address bar or menu')
     }
   }
 
@@ -226,29 +165,9 @@ const Dashboard = ({ username, onLogout }) => {
             </div>
             <h1 className="text-lg font-semibold">Swiss Bank</h1>
           </div>
-          <div className="flex items-center space-x-2">
-            {showInstallButton && !isPWAInstalled && (
-              <button
-                onClick={handleInstallClick}
-                className="bg-white text-blue-900 px-3 py-1 rounded text-xs font-medium hover:bg-blue-50 transition-colors duration-200"
-                title="Install App"
-              >
-                📱 Install
-              </button>
-            )}
-            {!showInstallButton && !isPWAInstalled && (
-              <button
-                onClick={showInstallInstructions}
-                className="bg-white text-blue-900 px-3 py-1 rounded text-xs font-medium hover:bg-blue-50 transition-colors duration-200"
-                title="Install Instructions"
-              >
-                📱 Install
-              </button>
-            )}
-            <div className="text-right">
-              <p className="text-blue-100 text-xs">Welcome back</p>
-              <p className="font-medium text-sm">{formatUsername(username)}</p>
-            </div>
+          <div className="text-right">
+            <p className="text-blue-100 text-xs">Welcome back</p>
+            <p className="font-medium text-sm">{formatUsername(username)}</p>
           </div>
         </div>
       </div>

@@ -1,51 +1,124 @@
 import { useState, useEffect } from 'react'
 
-const SplashScreen = () => {
+const SplashScreen = ({ onAppReady }) => {
   const [showInstallButton, setShowInstallButton] = useState(false)
   const [deferredPrompt, setDeferredPrompt] = useState(null)
+  const [isPWAInstalled, setIsPWAInstalled] = useState(false)
+  const [showInstructions, setShowInstructions] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Listen for the beforeinstallprompt event
+    // Check if app is already installed as PWA
+    const checkIfInstalled = () => {
+      if (window.matchMedia('(display-mode: standalone)').matches || 
+          window.navigator.standalone === true) {
+        setIsPWAInstalled(true)
+        setShowInstallButton(false)
+        // Proceed to app after a short delay
+        setTimeout(() => {
+          onAppReady()
+        }, 1000)
+        return true
+      }
+      return false
+    }
+
+    // Handle beforeinstallprompt event
     const handleBeforeInstallPrompt = (e) => {
       e.preventDefault()
       setDeferredPrompt(e)
       setShowInstallButton(true)
+      setLoading(false)
       console.log('PWA install prompt available')
     }
 
-    // Listen for the appinstalled event
+    // Handle appinstalled event
     const handleAppInstalled = () => {
       console.log('PWA was installed')
       setShowInstallButton(false)
       setDeferredPrompt(null)
+      setIsPWAInstalled(true)
+      // Proceed to app after installation
+      setTimeout(() => {
+        onAppReady()
+      }, 1000)
     }
 
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
-    window.addEventListener('appinstalled', handleAppInstalled)
+    // Check if already installed first
+    if (!checkIfInstalled()) {
+      // If not installed, show install button after a delay
+      setTimeout(() => {
+        setLoading(false)
+        if (!showInstallButton) {
+          setShowInstructions(true)
+        }
+      }, 3000) // Show install instructions after 3 seconds
 
-    return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
-      window.removeEventListener('appinstalled', handleAppInstalled)
+      // Listen for install events
+      window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+      window.addEventListener('appinstalled', handleAppInstalled)
+
+      return () => {
+        window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+        window.removeEventListener('appinstalled', handleAppInstalled)
+      }
     }
-  }, [])
+  }, [onAppReady, showInstallButton])
 
   const handleInstallClick = async () => {
     if (deferredPrompt) {
-      deferredPrompt.prompt()
-      const { outcome } = await deferredPrompt.userChoice
-      console.log(`User response to the install prompt: ${outcome}`)
-      setDeferredPrompt(null)
-      setShowInstallButton(false)
+      try {
+        deferredPrompt.prompt()
+        const { outcome } = await deferredPrompt.userChoice
+        console.log(`User response to the install prompt: ${outcome}`)
+        
+        if (outcome === 'accepted') {
+          console.log('User accepted the install prompt')
+        } else {
+          console.log('User dismissed the install prompt')
+          setShowInstructions(true)
+        }
+        
+        setDeferredPrompt(null)
+        setShowInstallButton(false)
+      } catch (error) {
+        console.error('Error during install prompt:', error)
+        setShowInstructions(true)
+      }
+    } else {
+      setShowInstructions(true)
     }
+  }
+
+  const showInstallInstructions = () => {
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+    const isAndroid = /Android/.test(navigator.userAgent)
+    
+    let message = ''
+    
+    if (isIOS) {
+      message = 'To install Swiss Bank:\n\n1. Tap the Share button (square with arrow)\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add" to confirm\n\nThen open the app from your home screen!'
+    } else if (isAndroid) {
+      message = 'To install Swiss Bank:\n\n1. Tap the three dots menu (⋮)\n2. Tap "Add to Home Screen" or "Install App"\n3. Tap "Add" to confirm\n\nThen open the app from your home screen!'
+    } else {
+      message = 'To install Swiss Bank:\n\nLook for the install button in your browser\'s address bar or menu\n\nThen open the app from your home screen!'
+    }
+    
+    alert(message)
+  }
+
+  const handleContinueInBrowser = () => {
+    // Allow users to continue in browser if they want
+    onAppReady()
   }
 
   return (
     <div className="h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700 flex flex-col items-center justify-center p-4">
       <div className="text-center">
         {/* Logo */}
-        <div className="w-24 h-24 bg-white rounded-full flex items-center justify-center mb-6 mx-auto shadow-2xl relative overflow-hidden">
+        <div className="w-32 h-32 bg-white rounded-full flex items-center justify-center mb-8 mx-auto shadow-2xl relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-800 opacity-10"></div>
-          <svg className="w-12 h-12 text-blue-900 relative z-10" viewBox="0 0 120 120" fill="none">
+          <svg className="w-16 h-16 text-blue-900 relative z-10" viewBox="0 0 120 120" fill="none">
             <defs>
               <linearGradient id="bgGradSplash" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" style={{stopColor: "#ffffff"}} />
@@ -73,28 +146,81 @@ const SplashScreen = () => {
           </svg>
         </div>
         
-        <h1 className="text-4xl font-bold text-white mb-3">
+        <h1 className="text-5xl font-bold text-white mb-4">
           Swiss Bank
         </h1>
         
-        <p className="text-blue-100 text-lg">
+        <p className="text-blue-100 text-xl mb-8">
           Your Trusted Banking Partner
         </p>
-        
-        {/* Install Button */}
-        {showInstallButton && (
-          <button
-            onClick={handleInstallClick}
-            className="mt-6 bg-white text-blue-900 px-6 py-3 rounded-lg font-semibold shadow-lg hover:bg-blue-50 transition-colors duration-200"
-          >
-            📱 Install App
-          </button>
+
+        {/* Loading State */}
+        {loading && (
+          <div className="flex flex-col items-center space-y-4">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+            <p className="text-blue-100 text-lg">Loading...</p>
+          </div>
         )}
-        
-        {/* Loading indicator */}
-        <div className="mt-8 flex justify-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-        </div>
+
+        {/* Install Button */}
+        {showInstallButton && !loading && (
+          <div className="space-y-4">
+            <p className="text-blue-100 text-lg mb-6">
+              Install Swiss Bank for the best experience
+            </p>
+            <button
+              onClick={handleInstallClick}
+              className="bg-white text-blue-900 px-8 py-4 rounded-xl font-bold text-lg shadow-2xl hover:bg-blue-50 transition-all duration-300 transform hover:scale-105"
+            >
+              📱 Install Swiss Bank App
+            </button>
+            <div className="mt-4">
+              <button
+                onClick={handleContinueInBrowser}
+                className="text-blue-100 underline text-sm hover:text-white transition-colors"
+              >
+                Continue in browser
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Manual Install Instructions */}
+        {showInstructions && !showInstallButton && !loading && (
+          <div className="space-y-4">
+            <p className="text-blue-100 text-lg mb-6">
+              Install Swiss Bank for the best experience
+            </p>
+            <button
+              onClick={showInstallInstructions}
+              className="bg-white text-blue-900 px-8 py-4 rounded-xl font-bold text-lg shadow-2xl hover:bg-blue-50 transition-all duration-300 transform hover:scale-105"
+            >
+              📱 How to Install
+            </button>
+            <div className="mt-4">
+              <button
+                onClick={handleContinueInBrowser}
+                className="text-blue-100 underline text-sm hover:text-white transition-colors"
+              >
+                Continue in browser
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* PWA Installed Message */}
+        {isPWAInstalled && (
+          <div className="space-y-4">
+            <div className="animate-pulse">
+              <p className="text-green-300 text-lg mb-4">
+                ✅ Swiss Bank App Installed!
+              </p>
+              <p className="text-blue-100 text-sm">
+                Opening your banking app...
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
