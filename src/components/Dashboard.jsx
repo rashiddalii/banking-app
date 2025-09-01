@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 const Dashboard = ({ username, onLogout }) => {
   const [balance, setBalance] = useState(0)
   const [showTransferPopup, setShowTransferPopup] = useState(false)
+  const [showWithdrawPopup, setShowWithdrawPopup] = useState(false)
   const [amount, setAmount] = useState('')
 
   const features = [
@@ -48,7 +49,7 @@ const Dashboard = ({ username, onLogout }) => {
       name: 'Withdraw', 
       color: 'bg-gradient-to-br from-orange-400 to-orange-600',
       bgColor: 'bg-orange-50',
-      action: () => alert('Withdraw feature coming soon!')
+      action: () => setShowWithdrawPopup(true)
     },
     { 
       icon: (
@@ -127,6 +128,20 @@ const Dashboard = ({ username, onLogout }) => {
       localStorage.setItem('swissBankBalance', newBalance.toString())
       setAmount('')
       setShowTransferPopup(false)
+    }
+  }
+
+  const handleWithdraw = () => {
+    const numAmount = parseFloat(amount)
+    if (numAmount > 0 && numAmount <= balance) {
+      const newBalance = balance - numAmount
+      setBalance(newBalance)
+      // Save to localStorage
+      localStorage.setItem('swissBankBalance', newBalance.toString())
+      setAmount('')
+      setShowWithdrawPopup(false)
+    } else if (numAmount > balance) {
+      alert('Insufficient balance!')
     }
   }
 
@@ -294,6 +309,47 @@ const Dashboard = ({ username, onLogout }) => {
                 className="flex-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200"
               >
                 Add Balance
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Withdraw/Remove Balance Modal */}
+      {showWithdrawPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className="bg-white rounded-xl p-6 w-full max-w-sm shadow-2xl">
+            <div className="flex items-center mb-4">
+              <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-orange-600 rounded-xl flex items-center justify-center mr-3">
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold">Withdraw Balance</h3>
+            </div>
+            <p className="text-gray-600 text-sm mb-4">Withdraw funds from your account balance</p>
+            <div className="bg-orange-50 border border-orange-200 rounded-lg p-3 mb-4">
+              <p className="text-orange-800 text-sm font-medium">Current Balance: ₨{balance.toFixed(0)}.00</p>
+            </div>
+            <input
+              type="number"
+              placeholder="Enter amount to withdraw (PKR)"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-orange-500"
+            />
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowWithdrawPopup(false)}
+                className="flex-1 py-3 px-4 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleWithdraw}
+                className="flex-1 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200"
+              >
+                Withdraw
               </button>
             </div>
           </div>
