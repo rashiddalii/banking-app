@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 
 const Dashboard = ({ username, onLogout }) => {
   const [balance, setBalance] = useState(0)
-  const [showAddBalance, setShowAddBalance] = useState(false)
+  const [showTransferPopup, setShowTransferPopup] = useState(false)
   const [amount, setAmount] = useState('')
 
   const features = [
@@ -14,7 +14,8 @@ const Dashboard = ({ username, onLogout }) => {
       ), 
       name: 'Transfer', 
       color: 'bg-gradient-to-br from-green-400 to-green-600',
-      bgColor: 'bg-green-50'
+      bgColor: 'bg-green-50',
+      action: () => setShowTransferPopup(true)
     },
     { 
       icon: (
@@ -24,7 +25,8 @@ const Dashboard = ({ username, onLogout }) => {
       ), 
       name: 'History', 
       color: 'bg-gradient-to-br from-blue-400 to-blue-600',
-      bgColor: 'bg-blue-50'
+      bgColor: 'bg-blue-50',
+      action: () => alert('History feature coming soon!')
     },
     { 
       icon: (
@@ -34,7 +36,8 @@ const Dashboard = ({ username, onLogout }) => {
       ), 
       name: 'Pay Bills', 
       color: 'bg-gradient-to-br from-purple-400 to-purple-600',
-      bgColor: 'bg-purple-50'
+      bgColor: 'bg-purple-50',
+      action: () => alert('Pay Bills feature coming soon!')
     },
     { 
       icon: (
@@ -44,7 +47,8 @@ const Dashboard = ({ username, onLogout }) => {
       ), 
       name: 'Withdraw', 
       color: 'bg-gradient-to-br from-orange-400 to-orange-600',
-      bgColor: 'bg-orange-50'
+      bgColor: 'bg-orange-50',
+      action: () => alert('Withdraw feature coming soon!')
     },
     { 
       icon: (
@@ -54,7 +58,8 @@ const Dashboard = ({ username, onLogout }) => {
       ), 
       name: 'Cards', 
       color: 'bg-gradient-to-br from-indigo-400 to-indigo-600',
-      bgColor: 'bg-indigo-50'
+      bgColor: 'bg-indigo-50',
+      action: () => alert('Cards feature coming soon!')
     },
     { 
       icon: (
@@ -64,7 +69,8 @@ const Dashboard = ({ username, onLogout }) => {
       ), 
       name: 'Shopping', 
       color: 'bg-gradient-to-br from-pink-400 to-pink-600',
-      bgColor: 'bg-pink-50'
+      bgColor: 'bg-pink-50',
+      action: () => alert('Shopping feature coming soon!')
     },
   ]
 
@@ -120,7 +126,7 @@ const Dashboard = ({ username, onLogout }) => {
       // Save to localStorage
       localStorage.setItem('swissBankBalance', newBalance.toString())
       setAmount('')
-      setShowAddBalance(false)
+      setShowTransferPopup(false)
     }
   }
 
@@ -194,21 +200,6 @@ const Dashboard = ({ username, onLogout }) => {
           </div>
         </div>
 
-        {/* Add Balance Button */}
-        <div className="px-4 mb-4">
-          <button
-            onClick={() => setShowAddBalance(true)}
-            className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold rounded-xl shadow-lg transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98]"
-          >
-            <div className="flex items-center justify-center space-x-2">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
-              <span>Add Balance</span>
-            </div>
-          </button>
-        </div>
-
         {/* Features Grid */}
         <div className="px-4 mb-4">
           <h3 className="text-base font-semibold text-gray-800 mb-3">Quick Actions</h3>
@@ -216,6 +207,7 @@ const Dashboard = ({ username, onLogout }) => {
             {features.map((feature, index) => (
               <div
                 key={index}
+                onClick={feature.action}
                 className={`${feature.bgColor} rounded-xl p-4 text-center shadow-sm border border-gray-100 hover:shadow-md transition-all duration-200 cursor-pointer transform hover:scale-105 active:scale-95`}
               >
                 <div className={`w-12 h-12 ${feature.color} rounded-xl flex items-center justify-center mx-auto mb-2 shadow-md`}>
@@ -270,30 +262,38 @@ const Dashboard = ({ username, onLogout }) => {
         </div>
       </div>
 
-      {/* Add Balance Modal */}
-      {showAddBalance && (
+      {/* Transfer/Add Balance Modal */}
+      {showTransferPopup && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
           <div className="bg-white rounded-xl p-6 w-full max-w-sm shadow-2xl">
-            <h3 className="text-xl font-semibold mb-4">Add Balance</h3>
+            <div className="flex items-center mb-4">
+              <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center mr-3">
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold">Add Balance</h3>
+            </div>
+            <p className="text-gray-600 text-sm mb-4">Add funds to your account balance</p>
             <input
               type="number"
               placeholder="Enter amount (PKR)"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className="w-full p-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-blue-900"
+              className="w-full p-3 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-green-500"
             />
             <div className="flex gap-3">
               <button
-                onClick={() => setShowAddBalance(false)}
+                onClick={() => setShowTransferPopup(false)}
                 className="flex-1 py-3 px-4 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
               >
                 Cancel
               </button>
               <button
                 onClick={handleAddBalance}
-                className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200"
+                className="flex-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200"
               >
-                Add
+                Add Balance
               </button>
             </div>
           </div>
