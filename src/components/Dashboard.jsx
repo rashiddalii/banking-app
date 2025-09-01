@@ -194,7 +194,7 @@ const Dashboard = ({ username, onLogout }) => {
             </button>
             <div>
               <h2 className="text-base font-medium mb-1">Current Balance</h2>
-              <p className="text-3xl font-bold">₨ {balance.toFixed(0)}.00</p>
+              <p className="text-3xl font-bold">₨: {balance.toFixed(0)}.00</p>
               <p className="text-blue-100 text-xs mt-1">Available for transactions</p>
             </div>
           </div>
