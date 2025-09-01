@@ -224,7 +224,7 @@ const Dashboard = ({ username, onLogout }) => {
         {/* Recent Transactions */}
         <div className="px-4 mb-4">
           <h3 className="text-base font-semibold text-gray-800 mb-3">Recent Transactions</h3>
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+          {/* <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
             {recentTransactions.map((transaction, index) => (
               <div key={index} className={`p-3 ${index !== recentTransactions.length - 1 ? 'border-b border-gray-100' : ''}`}>
                 <div className="flex items-center justify-between">
@@ -258,7 +258,7 @@ const Dashboard = ({ username, onLogout }) => {
                 </div>
               </div>
             ))}
-          </div>
+          </div> */}
         </div>
       </div>
 
