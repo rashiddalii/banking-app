@@ -23,12 +23,12 @@ const LoginScreen = ({ onLogin }) => {
   }
 
   return (
-    <div className="h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700 flex items-center justify-center p-4">
+    <div className="h-screen bg-gradient-to-br from-red-900 via-red-800 to-red-700 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-2xl p-8 w-full max-w-sm">
         {/* Logo */}
         <div className="text-center mb-8">
-          <div className="w-20 h-20 bg-gradient-to-br from-blue-600 to-blue-800 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-400 to-blue-600 opacity-30"></div>
+          <div className="w-20 h-20 bg-gradient-to-br from-red-600 to-red-800 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-br from-red-400 to-red-600 opacity-30"></div>
             <svg className="w-10 h-10 text-white relative z-10" viewBox="0 0 120 120" fill="none">
               <defs>
                 <linearGradient id="bgGradLogin" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -77,7 +77,7 @@ const LoginScreen = ({ onLogin }) => {
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent"
+                className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-900 focus:border-transparent"
                 placeholder="Enter your username"
                 required
               />
@@ -99,7 +99,7 @@ const LoginScreen = ({ onLogin }) => {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-900 focus:border-transparent"
+                className="w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-900 focus:border-transparent"
                 placeholder="Enter your password"
                 required
               />
@@ -118,7 +118,7 @@ const LoginScreen = ({ onLogin }) => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 disabled:from-blue-400 disabled:to-blue-500 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-200 shadow-lg"
+            className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 disabled:from-red-400 disabled:to-red-500 text-white font-semibold py-4 px-6 rounded-lg transition-all duration-200 shadow-lg"
           >
             {isLoading ? (
               <div className="flex items-center justify-center">

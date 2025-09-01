@@ -151,43 +151,43 @@ const Dashboard = ({ username, onLogout }) => {
 
   return (
     <div className="h-screen bg-gray-50 flex flex-col overflow-hidden">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-blue-900 to-blue-800 text-white p-4 flex-shrink-0 shadow-lg">
+             {/* Header */}
+       <div className="bg-gradient-to-r from-red-900 to-red-800 text-white p-4 flex-shrink-0 shadow-lg">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center mr-2 shadow-md relative overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-800 opacity-20"></div>
-              <svg className="w-5 h-5 text-blue-900 relative z-10" viewBox="0 0 120 120" fill="none">
-                <defs>
-                  <linearGradient id="bgGradDashboard" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style={{stopColor: "#ffffff"}} />
-                    <stop offset="100%" style={{stopColor: "#f0f8ff"}} />
-                  </linearGradient>
-                  <linearGradient id="borderGradDashboard" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style={{stopColor: "#3b82f6"}} />
-                    <stop offset="50%" style={{stopColor: "#1e40af"}} />
-                    <stop offset="100%" style={{stopColor: "#1e3a8a"}} />
-                  </linearGradient>
-                  <linearGradient id="letterGradDashboard" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style={{stopColor: "#3b82f6"}} />
-                    <stop offset="50%" style={{stopColor: "#2563eb"}} />
-                    <stop offset="100%" style={{stopColor: "#1e40af"}} />
-                  </linearGradient>
-                </defs>
-                <circle cx="60" cy="60" r="58" fill="url(#bgGradDashboard)" stroke="url(#borderGradDashboard)" strokeWidth="2"/>
-                <g transform="translate(60, 60)">
-                  <path d="M-25 -20 Q-25 -30 -15 -30 Q-5 -30 -5 -20 Q-5 -10 -15 -10 Q-25 -10 -25 0 Q-25 10 -15 10 Q-5 10 -5 20 Q-5 30 -15 30 Q-25 30 -25 20" 
-                        fill="none" stroke="url(#letterGradDashboard)" strokeWidth="4" strokeLinecap="round"/>
-                  <path d="M-5 -30 L-5 30 M-5 -30 Q15 -30 15 -15 Q15 0 -5 0 Q15 0 15 15 Q15 30 -5 30" 
-                        fill="none" stroke="url(#letterGradDashboard)" strokeWidth="4" strokeLinecap="round"/>
-                  <circle cx="-5" cy="0" r="2" fill="#3b82f6"/>
-                </g>
-              </svg>
+                         <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center mr-2 shadow-md relative overflow-hidden">
+               <div className="absolute inset-0 bg-gradient-to-br from-red-600 to-red-800 opacity-20"></div>
+               <svg className="w-5 h-5 text-red-900 relative z-10" viewBox="0 0 120 120" fill="none">
+                 <defs>
+                   <linearGradient id="bgGradDashboard" x1="0%" y1="0%" x2="100%" y2="100%">
+                     <stop offset="0%" style={{stopColor: "#ffffff"}} />
+                     <stop offset="100%" style={{stopColor: "#fef2f2"}} />
+                   </linearGradient>
+                   <linearGradient id="borderGradDashboard" x1="0%" y1="0%" x2="100%" y2="100%">
+                     <stop offset="0%" style={{stopColor: "#dc2626"}} />
+                     <stop offset="50%" style={{stopColor: "#b91c1c"}} />
+                     <stop offset="100%" style={{stopColor: "#991b1b"}} />
+                   </linearGradient>
+                   <linearGradient id="letterGradDashboard" x1="0%" y1="0%" x2="100%" y2="100%">
+                     <stop offset="0%" style={{stopColor: "#dc2626"}} />
+                     <stop offset="50%" style={{stopColor: "#b91c1c"}} />
+                     <stop offset="100%" style={{stopColor: "#991b1c"}} />
+                   </linearGradient>
+                 </defs>
+                 <circle cx="60" cy="60" r="58" fill="url(#bgGradDashboard)" stroke="url(#borderGradDashboard)" strokeWidth="2"/>
+                 <g transform="translate(60, 60)">
+                   <path d="M-25 -20 Q-25 -30 -15 -30 Q-5 -30 -5 -20 Q-5 -10 -15 -10 Q-25 -10 -25 0 Q-25 10 -15 10 Q-5 10 -5 20 Q-5 30 -15 30 Q-25 30 -25 20" 
+                         fill="none" stroke="url(#letterGradDashboard)" strokeWidth="4" strokeLinecap="round"/>
+                   <path d="M-5 -30 L-5 30 M-5 -30 Q15 -30 15 -15 Q15 0 -5 0 Q15 0 15 15 Q15 30 -5 30" 
+                         fill="none" stroke="url(#letterGradDashboard)" strokeWidth="4" strokeLinecap="round"/>
+                   <circle cx="-5" cy="0" r="2" fill="#dc2626"/>
+                 </g>
+               </svg>
             </div>
             <h1 className="text-lg font-semibold">Swiss Bank</h1>
           </div>
-          <div className="text-right">
-            <p className="text-blue-100 text-xs">Welcome back</p>
+                     <div className="text-right">
+             <p className="text-red-100 text-xs">Welcome back</p>
             <p className="font-medium text-sm">{formatUsername(username)}</p>
           </div>
         </div>
@@ -195,12 +195,12 @@ const Dashboard = ({ username, onLogout }) => {
 
       {/* Main Content - Scrollable */}
       <div className="flex-1 overflow-y-auto">
-        {/* Balance Card */}
-        <div className="p-4">
-          <div className="card bg-gradient-to-br from-blue-900 via-blue-800 to-blue-700 text-white relative shadow-xl">
-            <button
-              onClick={onLogout}
-              className="absolute top-3 right-3 text-white hover:text-blue-200 transition-colors duration-200 p-1 rounded-full hover:bg-white hover:bg-opacity-10"
+                 {/* Balance Card */}
+         <div className="p-4">
+           <div className="card bg-gradient-to-br from-red-900 via-red-800 to-red-700 text-white relative shadow-xl">
+             <button
+               onClick={onLogout}
+               className="absolute top-3 right-3 text-white hover:text-red-200 transition-colors duration-200 p-1 rounded-full hover:bg-white hover:bg-opacity-10"
               title="Logout"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -210,7 +210,7 @@ const Dashboard = ({ username, onLogout }) => {
             <div>
               <h2 className="text-base font-medium mb-1">Current Balance</h2>
               <p className="text-3xl font-bold">₨: {balance.toFixed(0)}.00</p>
-              <p className="text-blue-100 text-xs mt-1">Available for transactions</p>
+                             <p className="text-red-100 text-xs mt-1">Available for transactions</p>
             </div>
           </div>
         </div>
